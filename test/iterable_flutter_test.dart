@@ -15,6 +15,10 @@ void main() {
   const String userId = '11111';
   const String jwt = '';
   const String event = 'my_event';
+  const int campaignId = 123;
+  const int templateId = 456;
+  const String messageId = '123456';
+  const bool appAlreadyRunning = false;
   const Map<String, dynamic> dataFields = {'data': 'field'};
 
   const contentBody = {'testKey': "Test body push"};
@@ -76,21 +80,47 @@ void main() {
   test('setEmail', () async {
     await IterableFlutter.setEmail(email, jwt);
     expect(calledMethod, <Matcher>[
-      isMethodCall('setEmail', arguments: email, jwt),
+      isMethodCall('setEmail', arguments: {
+        "email": email,
+        "jwt": jwt,
+      }),
     ]);
   });
 
   test('setUserId', () async {
     await IterableFlutter.setUserId(userId, jwt);
     expect(calledMethod, <Matcher>[
-      isMethodCall('setUserId', arguments: userId, jwt),
+      isMethodCall('setUserId', arguments: {
+        "userId": userId,
+        "jwt": jwt,
+      }),
     ]);
   });
 
   test('updateEmail', () async {
     await IterableFlutter.updateEmail(email, jwt);
     expect(calledMethod, <Matcher>[
-      isMethodCall('updateEmail', arguments: email, jwt),
+      isMethodCall('updateEmail', arguments: {
+        "email": email,
+        "jwt": jwt,
+      }),
+    ]);
+  });
+
+  test('trackPushOpen', () async {
+    await IterableFlutter.trackPushOpen(
+      campaignId,
+      templateId,
+      messageId,
+      appAlreadyRunning,
+    );
+    expect(calledMethod, <Matcher>[
+      isMethodCall('trackPushOpen', arguments: {
+        "campaignId": campaignId,
+        "templateId": templateId,
+        "messageId": messageId,
+        "appAlreadyRunning": appAlreadyRunning,
+      }),
     ]);
   });
 
@@ -146,16 +176,15 @@ void main() {
       pushData = openedResultMap;
     });
 
-    await ServicesBinding.instance?.defaultBinaryMessenger
-        .handlePlatformMessage(
-            'iterable_flutter',
-            const StandardMethodCodec().encodeMethodCall(
-              const MethodCall(
-                'openedNotificationHandler',
-                {keyBody: contentBody},
-              ),
-            ),
-            (ByteData? data) {});
+    await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+        'iterable_flutter',
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall(
+            'openedNotificationHandler',
+            {keyBody: contentBody},
+          ),
+        ),
+        (ByteData? data) {});
 
     expect(contentBody, pushData[keyBody]);
   });

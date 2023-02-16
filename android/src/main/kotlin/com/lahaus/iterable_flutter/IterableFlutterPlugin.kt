@@ -69,6 +69,13 @@ class IterableFlutterPlugin : FlutterPlugin, MethodCallHandler {
         IterableApi.getInstance().updateEmail(userEmail, jwt)
         result.success(null)
       }
+      "trackPushOpen" -> {
+        val campaignId = call.argument<Int>("campaignId") ?: 0
+        val templateId = call.argument<Int>("templateId") ?: 0
+        val messageId = call.argument<String>("messageId") ?: ""
+        IterableApi.getInstance().trackPushOpen(campaignId, templateId, messageId)
+        result.success(null)
+      }
       "track" -> {
         val argumentData = call.arguments as? Map<*, *>
         
