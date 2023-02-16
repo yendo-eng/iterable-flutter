@@ -53,6 +53,17 @@ public class SwiftIterableFlutterPlugin: NSObject, FlutterPlugin, UNUserNotifica
             IterableAPI.updateEmail(email, withToken: jwt, onSuccess: nil, onFailure: nil)
 
             result(nil)
+        case "trackPushOpen":
+            let args = getPropertiesFromArguments(call.arguments)
+
+            let campaignId = args["campaignId"] as! NSNumber
+            let templateId = args["templateId"] as! NSNumber
+            let messageId = args["messageId"] as! String
+            let appAlreadyRunning = args["appAlreadyRunning"] as! Bool
+            
+            IterableAPI.track(pushOpen: campaignId, templateId: templateId, messageId: messageId, appAlreadyRunning: appAlreadyRunning, dataFields: nil)
+
+            result(nil)
         case "track":
             let argumentData = call.arguments as! [String : Any] 
         

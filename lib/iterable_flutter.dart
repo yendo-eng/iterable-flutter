@@ -57,6 +57,23 @@ class IterableFlutter {
     );
   }
 
+  static Future<void> trackPushOpen(
+    int campaignId,
+    int templateId,
+    String messageId,
+    bool appAlreadyRunning,
+  ) async {
+    await _channel.invokeMethod(
+      'trackPushOpen',
+      {
+        "campaignId": campaignId,
+        "templateId": templateId,
+        "messageId": messageId,
+        "appAlreadyRunning": appAlreadyRunning
+      },
+    );
+  }
+
   static Future<void> track(
     String event, {
     Map<String, dynamic>? dataFields,
